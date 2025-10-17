@@ -11,6 +11,7 @@ st.set_page_config(
     page_icon="⚡",
     layout="centered"
 )
+STORAGE_CSV = "registry.csv"
 
 # ---------------- HEADER / BRANDING ----------------
 st.markdown(
@@ -166,4 +167,5 @@ st.markdown("---")
 st.caption(
     "MERCURY — Beyond The Loop | Phase-1 Prototype | Streamlit Cloud Deployment"
 )
+
 
