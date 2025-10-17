@@ -120,3 +120,4 @@ if st.button("Download registry (CSV)"):
     ensure_registry()
     with open(STORAGE_CSV, "rb") as f:
         st.download_button("Download CSV", data=f, file_name="mercury_registry.csv")
+
