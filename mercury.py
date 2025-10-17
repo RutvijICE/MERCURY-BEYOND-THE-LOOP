@@ -38,14 +38,16 @@ def ensure_registry(path=STORAGE_CSV):
 def append_registry(agent_id, threat_label, antibody, example, path=STORAGE_CSV):
     ensure_registry(path)
     df = pd.read_csv(path)
-    new_row = pd.DataFrame({
+    new_row = pd.DataFrame([{
         "agent_id": agent_id,
         "threat_label": threat_label,
         "antibody": antibody,
         "timestamp": datetime.utcnow().isoformat(),
         "example": example[:300]
-    }, ignore_index=True)
+    }])
+    df = pd.concat([df, new_row], ignore_index=True)
     df.to_csv(path, index=False)
+
 
 def read_registry(path=STORAGE_CSV, limit=10):
     ensure_registry(path)
@@ -120,5 +122,6 @@ if st.button("Download registry (CSV)"):
     ensure_registry()
     with open(STORAGE_CSV, "rb") as f:
         st.download_button("Download CSV", data=f, file_name="mercury_registry.csv")
+
 
 
