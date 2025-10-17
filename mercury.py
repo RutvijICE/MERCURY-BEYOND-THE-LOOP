@@ -38,7 +38,7 @@ def ensure_registry(path=STORAGE_CSV):
 def append_registry(agent_id, threat_label, antibody, example, path=STORAGE_CSV):
     ensure_registry(path)
     df = pd.read_csv(path)
-    df = df.append({
+    new_row = pd.DataFrame({
         "agent_id": agent_id,
         "threat_label": threat_label,
         "antibody": antibody,
@@ -120,4 +120,5 @@ if st.button("Download registry (CSV)"):
     ensure_registry()
     with open(STORAGE_CSV, "rb") as f:
         st.download_button("Download CSV", data=f, file_name="mercury_registry.csv")
+
 
