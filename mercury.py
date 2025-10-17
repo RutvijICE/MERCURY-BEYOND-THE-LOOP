@@ -11,47 +11,10 @@ st.set_page_config(
     page_icon="⚡",
     layout="centered"
 )
+
 STORAGE_CSV = "registry.csv"
-
-# ---------------- HEADER / BRANDING ----------------
-st.markdown(
-    """
-    <style>
-    .mercury-header {
-        text-align: center;
-        padding: 30px 0 10px 0;
-    }
-    .brand-title {
-        font-size: 42px;
-        font-weight: 700;
-        color: #111;
-        letter-spacing: 1px;
-        margin-bottom: 8px;
-    }
-    .brand-subtitle {
-        font-size: 18px;
-        color: #555;
-        font-style: italic;
-        margin-bottom: 15px;
-    }
-    .brand-divider {
-        height: 4px;
-        width: 120px;
-        margin: auto;
-        border-radius: 5px;
-        background: linear-gradient(90deg, #7f00ff, #e100ff);
-    }
-    </style>
-
-    <div class="mercury-header">
-        <div class="brand-title">⚡ MERCURY</div>
-        <div class="brand-subtitle">Beyond The Loop — Cognitive Immunity Network For Agentic AI</div>
-        <div class="brand-divider"></div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
+APP_TITLE = "⚡ MERCURY — Beyond The Loop"
+TAGLINE = "Cognitive Immunity Network For Agentic AI Systems"
 
 # ---------------- UTILITIES ----------------
 def detect_threat(text: str):
@@ -167,5 +130,3 @@ st.markdown("---")
 st.caption(
     "MERCURY — Beyond The Loop | Phase-1 Prototype | Streamlit Cloud Deployment"
 )
-
-
