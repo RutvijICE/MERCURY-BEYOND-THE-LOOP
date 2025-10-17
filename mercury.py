@@ -14,6 +14,7 @@ st.set_page_config(
 
 STORAGE_CSV = "registry.csv"
 APP_TITLE = "⚡ MERCURY — Beyond The Loop"
+
 TAGLINE = "Cognitive Immunity Network For Agentic AI Systems"
 
 # ---------------- UTILITIES ----------------
@@ -130,3 +131,4 @@ st.markdown("---")
 st.caption(
     "MERCURY — Beyond The Loop | Phase-1 Prototype | Streamlit Cloud Deployment"
 )
+
