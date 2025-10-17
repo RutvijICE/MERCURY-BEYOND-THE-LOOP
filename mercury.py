@@ -96,6 +96,7 @@ def imperative_density(s: str):
 def detect_threat_smart(raw_text: str):
     s_orig = raw_text or ""
     s = normalize_input(s_orig)
+    st.write("DEBUG INPUT:", s)
     reasons = []
     score = 0.0  # raw score, we will normalize to 0-100
     token_matches = {}
@@ -392,3 +393,4 @@ with right:
 # Final footer
 st.markdown("---")
 st.caption("Phase-1 prototype • Heuristic detector (explainable) • In Phase-2: embed semantic verification & blockchain anchoring for antibodies.")
+
