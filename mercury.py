@@ -1,4 +1,3 @@
-# mercury.py
 import streamlit as st
 import hashlib
 import pandas as pd
@@ -6,12 +5,18 @@ import time
 import os
 from datetime import datetime
 
-# ---------- CONFIG ----------
-STORAGE_CSV = "registry.csv"
-APP_TITLE = "MERCURY — Cognitive Immunity Network"
-TAGLINE = "Self-defending intelligence for agentic AI."
+# ---------------- CONFIG ----------------
+st.set_page_config(
+    page_title="MERCURY — Beyond The Loop",
+    page_icon="⚡",
+    layout="centered"
+)
 
-# ---------- UTILS ----------
+STORAGE_CSV = "registry.csv"
+APP_TITLE = "⚡ MERCURY — Beyond The Loop"
+TAGLINE = "Cognitive Immunity Network For Agentic AI Systems"
+
+# ---------------- UTILITIES ----------------
 def detect_threat(text: str):
     if not text.strip():
         return {"status": "no_input", "reason": "No input provided."}
@@ -27,27 +32,25 @@ def detect_threat(text: str):
 def generate_antibody(text: str):
     if not text:
         return None
-    full = hashlib.sha256(text.encode()).hexdigest()
-    return full
+    return hashlib.sha256(text.encode()).hexdigest()
 
 def ensure_registry(path=STORAGE_CSV):
     if not os.path.exists(path):
-        df = pd.DataFrame(columns=["agent_id","threat_label","antibody","timestamp","example"])
+        df = pd.DataFrame(columns=["Agent ID","Threat Label","Antibody","Timestamp","Example"])
         df.to_csv(path, index=False)
 
 def append_registry(agent_id, threat_label, antibody, example, path=STORAGE_CSV):
     ensure_registry(path)
     df = pd.read_csv(path)
     new_row = pd.DataFrame([{
-        "agent_id": agent_id,
-        "threat_label": threat_label,
-        "antibody": antibody,
-        "timestamp": datetime.utcnow().isoformat(),
-        "example": example[:300]
+        "Agent ID": agent_id,
+        "Threat Label": threat_label,
+        "Antibody": antibody,
+        "Timestamp": datetime.utcnow().isoformat(),
+        "Example": example[:200]
     }])
     df = pd.concat([df, new_row], ignore_index=True)
     df.to_csv(path, index=False)
-
 
 def read_registry(path=STORAGE_CSV, limit=10):
     ensure_registry(path)
@@ -56,72 +59,74 @@ def read_registry(path=STORAGE_CSV, limit=10):
         return df
     return df.tail(limit).iloc[::-1]
 
-# ---------- UI ----------
-st.set_page_config(page_title="MERCURY", layout="wide")
-st.title(APP_TITLE)
-st.markdown(f"**{TAGLINE}**")
-st.write("---")
+# ---------------- UI DESIGN ----------------
+st.markdown(
+    f"""
+    <div style='text-align:center;'>
+        <h1 style='color:#ffffff;background:#1c1c1e;padding:20px;border-radius:12px;'>
+            {APP_TITLE}
+        </h1>
+        <p style='font-size:18px;color:#666;margin-top:-10px;'>{TAGLINE}</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-left, right = st.columns([2,3])
-with left:
-    st.subheader("Agent Simulation")
-    agent_id = st.text_input("Agent ID", value="Agent-A")
-    text = st.text_area("Paste AI input or prompt here", height=200)
+st.write(" ")
+st.markdown("### 🧠 **Simulate an AI Agent Interaction**")
 
-    if st.button("Detect Threat"):
-        res = detect_threat(text)
-        if res["status"] == "no_input":
-            st.warning(res["reason"])
-        elif res["status"] == "clean":
-            st.success("✅ Input Safe — " + res["reason"])
-        else:
-            st.error("⚠️ " + res["reason"])
-        st.write("**Detector verdict:**", res["status"])
+agent_id = st.text_input("Agent ID", value="Agent-A", help="Give this agent a name or code.")
+text = st.text_area("Paste AI Input or Prompt Below:", height=180)
 
-    if st.button("Generate Antibody"):
-        if not text.strip():
-            st.warning("Enter some input first to generate antibody.")
-        else:
-            sig = generate_antibody(text)
-            short = sig[:12] + "..." + sig[-6:]
-            st.code(f"Antibody Signature: {short}")
-            st.info("This signature is a compact fingerprint of the suspicious input.")
-            st.session_state["last_antibody"] = sig
+col1, col2, col3 = st.columns(3)
+with col1:
+    detect_btn = st.button("🔍 Detect Threat")
+with col2:
+    antibody_btn = st.button("🧬 Generate Antibody")
+with col3:
+    share_btn = st.button("📡 Share To Network")
 
-    if st.button("Share To Network"):
-        antibody = st.session_state.get("last_antibody", None)
-        if antibody is None:
-            st.warning("No antibody in session. Generate one first.")
-        else:
-            append_registry(agent_id, "antibody_shared", antibody, text)
-            st.success("🛰️ Antibody shared to registry (mock).")
-            st.balloons()
-            time.sleep(0.8)
-
-with right:
-    st.subheader("Network Registry (Recent)")
-    df = read_registry()
-    if df.empty:
-        st.info("Registry empty. Generate and share an antibody to populate it.")
+# ---------------- LOGIC ----------------
+if detect_btn:
+    res = detect_threat(text)
+    if res["status"] == "no_input":
+        st.warning(res["reason"])
+    elif res["status"] == "clean":
+        st.success(f"✅ Input Safe — {res['reason']}")
     else:
-        st.table(df)
+        st.error(f"⚠️ {res['reason']}")
+    st.caption(f"Detector Verdict: {res['status'].upper()}")
 
-    st.write("---")
-    st.subheader("How the Loop Works (Quick)")
-    st.markdown("""
-    1. **Detect** suspicious input (prompt injection, data poisoning patterns).  
-    2. **Generate Antibody** — deterministic hash signature of the threat.  
-    3. **Share** the antibody to the registry so peers can consume and avoid the same attack.  
-    4. **Agents update** (simulated) — collective immunity emerges.
-    """)
-    st.write("---")
-    st.caption("Phase-1 demo (mock). Phase-2: zk-anchoring, validator attestations, and decentralized storage.")
+if antibody_btn:
+    if not text.strip():
+        st.warning("Enter some text first.")
+    else:
+        sig = generate_antibody(text)
+        st.session_state["last_antibody"] = sig
+        st.code(f"Antibody Signature: {sig[:14]}...{sig[-8:]}")
+        st.info("Antibody is a unique fingerprint of this input — like a digital vaccine.")
 
-st.write("---")
-if st.button("Download registry (CSV)"):
-    ensure_registry()
-    with open(STORAGE_CSV, "rb") as f:
-        st.download_button("Download CSV", data=f, file_name="mercury_registry.csv")
+if share_btn:
+    antibody = st.session_state.get("last_antibody", None)
+    if antibody is None:
+        st.warning("Generate an antibody before sharing.")
+    else:
+        append_registry(agent_id, "Antibody Shared", antibody, text)
+        st.success("🛰️ Antibody shared successfully to the mock network.")
+        st.balloons()
 
+# ---------------- REGISTRY SECTION ----------------
+st.markdown("---")
+st.markdown("### 🌐 **MERCURY Registry (Recent Antibodies)**")
 
+df = read_registry()
+if df.empty:
+    st.info("Registry is empty — generate and share an antibody to populate it.")
+else:
+    st.dataframe(df, use_container_width=True, hide_index=True)
 
+# ---------------- FOOTER ----------------
+st.markdown("---")
+st.caption(
+    "MERCURY — Beyond The Loop | Phase-1 Prototype | Streamlit Cloud Deployment"
+)
