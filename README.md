@@ -37,7 +37,7 @@ Each AI agent contributes “antibodies” (compact cryptographic signatures of 
 ### ⚙️ How To Run Locally
 ```bash
 # 1. Clone this repository
-git clone https://github.com/<your-username>/mercury-loop.git
+git clone https://github.com/RutvijICE/mercury-loop.git
 cd mercury-loop
 
 # 2. Install dependencies
